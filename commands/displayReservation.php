@@ -86,7 +86,11 @@
         }
 
         
-
+        public function deleteReserve($getId){
+            $deleteFunction = $this->database->prepare("DELETE FROM reservation WHERE id_reservation = :getID");
+            $deleteFunction->bindParam(":getID",$getId);
+        }
+        
         
     }
 
