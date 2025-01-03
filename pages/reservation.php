@@ -39,6 +39,8 @@
                             <td class="py-4 px-6">
                                 <button onclick="openModifyPopup('Luxury Sedan', '2024-01-15', '2024-01-20')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Modify</button>
                                 <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cancel</button>
+                                <!-- New "Set Review" Button -->
+                                <button onclick="openReviewPopup('Luxury Sedan')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Set Review</button>
                             </td>
                         </tr>
 
@@ -51,6 +53,8 @@
                             <td class="py-4 px-6">
                                 <button onclick="openModifyPopup('SUV', '2024-01-10', '2024-01-15')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Modify</button>
                                 <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cancel</button>
+                                <!-- New "Set Review" Button -->
+                                <button onclick="openReviewPopup('SUV')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Set Review</button>
                             </td>
                         </tr>
 
@@ -59,7 +63,6 @@
                 </table>
             </section>
         </main>
-    </div>
 
     <!-- Modify Reservation Popup -->
     <div id="modifyPopup" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden justify-center items-center">
@@ -86,6 +89,34 @@
         </div>
     </div>
 
+    <!-- Set Review Popup -->
+    <div id="reviewPopup" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden justify-center items-center">
+        <div class="bg-white rounded-lg p-6 w-96">
+            <h3 class="text-2xl font-semibold mb-4">Set Review for <span id="reviewVehicle"></span></h3>
+            <form action="submit-review.php" method="POST">
+                <div class="mb-4">
+                    <label for="reviewRating" class="block text-gray-700">Rating</label>
+                    <select id="reviewRating" name="rating" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        <option value="1">1 Star</option>
+                        <option value="2">2 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="5">5 Stars</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="reviewText" class="block text-gray-700">Review</label>
+                    <textarea id="reviewText" name="reviewText" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg"></textarea>
+                </div>
+                <input type="hidden" id="reviewVehicleName" name="vehicle">
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="closeReviewPopup()" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">Cancel</button>
+                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         // Open Modify Popup with Pre-filled Data
         function openModifyPopup(vehicle, pickupDate, returnDate) {
@@ -98,6 +129,18 @@
         // Close Modify Popup
         function closeModifyPopup() {
             document.getElementById("modifyPopup").classList.add("hidden");
+        }
+
+        // Open Review Popup with Vehicle Name
+        function openReviewPopup(vehicle) {
+            document.getElementById("reviewVehicle").textContent = vehicle;
+            document.getElementById("reviewVehicleName").value = vehicle;
+            document.getElementById("reviewPopup").classList.remove("hidden");
+        }
+
+        // Close Review Popup
+        function closeReviewPopup() {
+            document.getElementById("reviewPopup").classList.add("hidden");
         }
     </script>
 </body>

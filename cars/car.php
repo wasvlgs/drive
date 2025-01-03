@@ -1,3 +1,61 @@
+
+
+
+<?php 
+
+
+    if(isset($_GET['car'])){
+        
+
+    }else{
+        die();
+    }
+
+
+    class getCar{
+
+        private $carId;
+        private $database;
+
+        public function __construct($db)
+        {
+            $this->carId = $_GET['car'];
+            $this->database = $db;
+        }
+
+
+        public function getInformation(){
+
+            $sql = "SELECT * FROM vehicule INNER JOIN categorie ON vehicule.id_categorie = categorie.id_categorie WHERE id_vehicule = :vehicule";
+            $getInfo = $this->database->prepare($sql);
+            $getInfo->bindParam(":vehicule",$this->carId);
+            if($getInfo->execute() && $getInfo->rowCount() === 1){
+                return $getInfo->fetch(PDO::FETCH_ASSOC);
+            }else{
+                die("No car exict!");
+            }
+        }
+    }
+
+
+    include_once '../database.php';
+    $conn = new database;
+    $connCard = new getCar($conn->getConnect());
+
+    $data = $connCard->getInformation();
+
+
+
+?>
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,32 +82,38 @@
     <div class="container mx-auto py-12 px-5">
         <div class="flex flex-col lg:flex-row justify-between items-center space-y-8 lg:space-y-0">
             <!-- Car Image Section -->
-            <div class="w-full lg:w-1/2">
-                <img src="../img/Europe Car Rental Market Research Report (2024-2032) - IMARC Group.jpg" alt="Car Image" class="w-full h-auto rounded-lg shadow-lg">
+            <div class="w-full lg:w-1/2 max-h-[550px] flex justify-center items-center overflow-hidden">
+                <img src="../img/imgPages/<?php echo $data['imgSrc']; ?>" alt="Car Image" class="w-full h-auto rounded-lg shadow-lg">
             </div>
 
             <!-- Car Information Section -->
             <div class="w-full lg:w-1/2 space-y-6 px-6">
-                <h2 class="text-4xl font-semibold text-gray-800">Luxury Sedan</h2>
-                <p class="text-xl text-gray-600">A premium car with comfort and style, perfect for long road trips or city driving.</p>
+                <h2 class="text-4xl font-semibold text-gray-800"><?php echo $data['name']; ?></h2>
+                <p class="text-xl text-gray-600"><?php echo $data['description']; ?></p>
 
                 <!-- Car Specifications -->
                 <div class="space-y-4">
                     <div class="flex justify-between text-gray-800">
                         <span class="font-medium">Category:</span>
-                        <span>Sedan</span>
+                        <span><?php echo $data['nom']; ?></span>
                     </div>
                     <div class="flex justify-between text-gray-800">
                         <span class="font-medium">Price per Day:</span>
-                        <span>$50</span>
+                        <span>$<?php echo $data['prix']; ?></span>
                     </div>
                     <div class="flex justify-between text-gray-800">
                         <span class="font-medium">Availability:</span>
-                        <span>Available</span>
+                        <span><?php
+                            if($data['disponibilite'] == 1){
+                                echo 'Available';
+                            }else{
+                                echo 'Not available';
+                            }
+                         ?></span>
                     </div>
                     <div class="flex justify-between text-gray-800">
-                        <span class="font-medium">Fuel Type:</span>
-                        <span>Gasoline</span>
+                        <span class="font-medium">Modele:</span>
+                        <span><?php echo $data['modele']; ?></span>
                     </div>
                 </div>
             </div>
@@ -58,47 +122,55 @@
         <!-- Reservation Form -->
         <section class="mt-12">
             <h3 class="text-3xl font-semibold text-gray-800 mb-6">Reserve This Car</h3>
-            <form action="#" method="POST" class="space-y-6">
+            <form method="POST" class="space-y-6">
                 <!-- Full Name -->
                 <div class="flex flex-col">
-                    <label for="full-name" class="text-gray-700 font-medium mb-2">Full Name</label>
-                    <input type="text" id="full-name" name="full-name" class="w-full p-3 border border-gray-300 rounded-md" required>
+                    <label for="lieuDeCharge" class="text-gray-700 font-medium mb-2">Lieu de charge</label>
+                    <input type="text" id="lieuDeCharge" name="lieuDeCharge" class="w-full p-3 border border-gray-300 rounded-md" required>
                 </div>
 
-                <!-- Email Address -->
-                <div class="flex flex-col">
-                    <label for="email" class="text-gray-700 font-medium mb-2">Email Address</label>
-                    <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-md" required>
-                </div>
+               
 
                 <!-- Reservation Dates -->
                 <div class="flex space-x-6">
                     <div class="flex flex-col w-1/2">
                         <label for="start-date" class="text-gray-700 font-medium mb-2">Start Date</label>
-                        <input type="date" id="start-date" name="start-date" class="w-full p-3 border border-gray-300 rounded-md" required>
+                        <input type="date" id="start-date" name="startDate" class="w-full p-3 border border-gray-300 rounded-md" required>
                     </div>
                     <div class="flex flex-col w-1/2">
                         <label for="end-date" class="text-gray-700 font-medium mb-2">End Date</label>
-                        <input type="date" id="end-date" name="end-date" class="w-full p-3 border border-gray-300 rounded-md" required>
+                        <input type="date" id="end-date" name="endDate" class="w-full p-3 border border-gray-300 rounded-md" required>
                     </div>
-                </div>
-
-                <!-- Payment Method -->
-                <div class="flex flex-col">
-                    <label for="payment-method" class="text-gray-700 font-medium mb-2">Payment Method</label>
-                    <select id="payment-method" name="payment-method" class="w-full p-3 border border-gray-300 rounded-md" required>
-                        <option value="credit-card">Credit Card</option>
-                        <option value="debit-card">Debit Card</option>
-                        <option value="paypal">PayPal</option>
-                    </select>
                 </div>
 
                 <!-- Submit Button -->
                 <div class="flex justify-end">
-                    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-500">Reserve Now</button>
+                    <button name="reserve" type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-500">Reserve Now</button>
                 </div>
             </form>
         </section>
+
+        <?php 
+
+            require_once '../database.php';
+            require_once '../commands/reserve.php';
+
+            if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['reserve'])){
+                $lieu = htmlspecialchars($_POST['lieuDeCharge']);
+                $startDate = htmlspecialchars($_POST['startDate']);
+                $endDate = htmlspecialchars($_POST['endDate']);
+                $conn = new database();
+                $getConn = $conn->getConnect();
+                $reserve = new reserve($lieu,$startDate,$endDate,$getConn);
+            }
+        
+        
+        
+        
+        
+        
+        
+        ?>
 
         <!-- Customer Reviews Section -->
         <section class="mt-12">
