@@ -24,7 +24,7 @@
         <main class="flex-1 p-6">
             <!-- Welcome Section -->
             <section id="dashboard" class="mb-12">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">Welcome Back, [User Name]!</h2>
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Welcome Back, <?php echo $getName; ?>!</h2>
                 <p class="text-gray-600">Here’s a quick summary of your account and activity.</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
                     <!-- Stats Cards -->

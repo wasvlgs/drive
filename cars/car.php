@@ -3,13 +3,7 @@
 
 <?php 
 
-
-    if(isset($_GET['car'])){
-        
-
-    }else{
-        die();
-    }
+    session_start();
 
 
     class getCar{
@@ -152,16 +146,21 @@
 
         <?php 
 
-            require_once '../database.php';
             require_once '../commands/reserve.php';
 
             if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['reserve'])){
-                $lieu = htmlspecialchars($_POST['lieuDeCharge']);
-                $startDate = htmlspecialchars($_POST['startDate']);
-                $endDate = htmlspecialchars($_POST['endDate']);
-                $conn = new database();
-                $getConn = $conn->getConnect();
-                $reserve = new reserve($lieu,$startDate,$endDate,$getConn);
+                $lieu = htmlspecialchars(trim($_POST['lieuDeCharge']));
+                $startDate = htmlspecialchars(trim($_POST['startDate']));
+                $endDate = htmlspecialchars(trim($_POST['endDate']));
+                $idClient = $_SESSION['id'];
+                $idVecule = htmlspecialchars(trim($_GET['car']));
+                if(!empty($lieu) && !empty($startDate) && !empty($endDate) && !empty($idClient) && !empty($idVecule)){
+                    $conn = new database();
+                    $getConn = $conn->getConnect();
+                    $reserve = new reserve($lieu,$startDate,$endDate,$idClient,$idVecule,$getConn);
+                    $reserve->reserve();
+                }
+                
             }
         
         

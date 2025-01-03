@@ -4,17 +4,19 @@
                 $getName;
 
 
-                if($_SESSION['id']){
+                if(isset($_SESSION['id']) && !empty($_SESSION['id'])){
                     $getID = $_SESSION['id'];
                 }else{
                     session_destroy();
                     echo '<script>location.replace("../login/login.php")</script>';
+                    die();
                 }
             
             
                 if($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['logout'])){
                     session_destroy();
                     echo '<script>location.replace("../index.php")</script>';
+                    die();
                 }
 
                 require_once '../database.php';

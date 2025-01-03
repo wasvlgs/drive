@@ -23,6 +23,7 @@
                     <thead>
                         <tr class="bg-blue-600 text-white">
                             <th class="py-3 px-6">Vehicle</th>
+                            <th class="py-3 px-6">Lieu</th>
                             <th class="py-3 px-6">Pickup Date</th>
                             <th class="py-3 px-6">Return Date</th>
                             <th class="py-3 px-6">Status</th>
@@ -30,48 +31,47 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Reservation Item 1 -->
-                        <tr class="border-b">
-                            <td class="py-4 px-6">Luxury Sedan</td>
-                            <td class="py-4 px-6">2024-01-15</td>
-                            <td class="py-4 px-6">2024-01-20</td>
-                            <td class="py-4 px-6 text-green-600">Confirmed</td>
-                            <td class="py-4 px-6">
-                                <button onclick="openModifyPopup('Luxury Sedan', '2024-01-15', '2024-01-20')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Modify</button>
-                                <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cancel</button>
-                                <!-- New "Set Review" Button -->
-                                <button onclick="openReviewPopup('Luxury Sedan')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Set Review</button>
-                            </td>
-                        </tr>
 
-                        <!-- Reservation Item 2 -->
-                        <tr class="border-b">
-                            <td class="py-4 px-6">SUV</td>
-                            <td class="py-4 px-6">2024-01-10</td>
-                            <td class="py-4 px-6">2024-01-15</td>
-                            <td class="py-4 px-6 text-yellow-600">Pending</td>
-                            <td class="py-4 px-6">
-                                <button onclick="openModifyPopup('SUV', '2024-01-10', '2024-01-15')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Modify</button>
-                                <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cancel</button>
-                                <!-- New "Set Review" Button -->
-                                <button onclick="openReviewPopup('SUV')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Set Review</button>
-                            </td>
-                        </tr>
 
-                        <!-- Additional Reservation Items... -->
+                        <?php
+
+                            require_once '../commands/displayReservation.php';
+                            $conn = new database();
+                            $getReservation = new displayReservation($conn->getConnect(),$getID);
+                            $getReservation->displayReservationClient();
+                            
+
+                            if($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['edit']) && !empty($_POST['edit'])){
+
+                                $getPlace = htmlspecialchars(trim($_POST['lieu']));
+                                $getStart = htmlspecialchars(trim($_POST['pickupDate']));
+                                $getEnd = htmlspecialchars(trim($_POST['returnDate']));
+                                $getReserveId = htmlspecialchars(trim($_POST['edit']));
+
+                                if(!empty($getPlace) && !empty($getStart) && !empty($getEnd) && !empty($getReserveId)){
+                                    $getReservation->editReserve($getPlace,$getStart,$getEnd,$getReserveId);
+                                }else{
+                                    echo '<script>alert("Invalid informations")</script>';
+                                }
+                            }
+
+
+                            
+                        ?>
+                        
                     </tbody>
                 </table>
             </section>
         </main>
 
     <!-- Modify Reservation Popup -->
-    <div id="modifyPopup" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden justify-center items-center">
-        <div class="bg-white rounded-lg p-6 w-96">
+    <div id="modifyPopup" class="fixed hidden flex justify-content items-center inset-0 bg-gray-800 bg-opacity-50 justify-center items-center">
+        <div class="bg-white rounded-lg p-6 w-full max-w-lg">
             <h3 class="text-2xl font-semibold mb-4">Modify Reservation</h3>
-            <form action="modify-reservation.php" method="POST">
+            <form method="POST">
                 <div class="mb-4">
-                    <label for="vehicle" class="block text-gray-700">Vehicle</label>
-                    <input type="text" id="vehicle" name="vehicle" class="w-full px-4 py-2 border border-gray-300 rounded-lg" disabled>
+                    <label for="vehicle" class="block text-gray-700">Lieu</label>
+                    <input type="text" id="vehicle" name="lieu" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
                 </div>
                 <div class="mb-4">
                     <label for="pickupDate" class="block text-gray-700">Pickup Date</label>
@@ -83,15 +83,15 @@
                 </div>
                 <div class="flex justify-end space-x-4">
                     <button type="button" onclick="closeModifyPopup()" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">Cancel</button>
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Save Changes</button>
+                    <button id="submit" name="edit" type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Set Review Popup -->
-    <div id="reviewPopup" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden justify-center items-center">
-        <div class="bg-white rounded-lg p-6 w-96">
+    <div id="reviewPopup" class="fixed hidden flex justify-content items-center inset-0 bg-gray-800 bg-opacity-50 justify-center items-center">
+        <div class="bg-white rounded-lg p-6 w-full max-w-lg">
             <h3 class="text-2xl font-semibold mb-4">Set Review for <span id="reviewVehicle"></span></h3>
             <form action="submit-review.php" method="POST">
                 <div class="mb-4">
@@ -108,7 +108,6 @@
                     <label for="reviewText" class="block text-gray-700">Review</label>
                     <textarea id="reviewText" name="reviewText" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg"></textarea>
                 </div>
-                <input type="hidden" id="reviewVehicleName" name="vehicle">
                 <div class="flex justify-end space-x-4">
                     <button type="button" onclick="closeReviewPopup()" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">Cancel</button>
                     <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Submit Review</button>
@@ -119,10 +118,11 @@
 
     <script>
         // Open Modify Popup with Pre-filled Data
-        function openModifyPopup(vehicle, pickupDate, returnDate) {
-            document.getElementById("vehicle").value = vehicle;
+        function openModifyPopup(place, pickupDate, returnDate, getID) {
+            document.getElementById("vehicle").value = place;
             document.getElementById("pickupDate").value = pickupDate;
             document.getElementById("returnDate").value = returnDate;
+            document.getElementById("submit").value = getID;
             document.getElementById("modifyPopup").classList.remove("hidden");
         }
 
@@ -133,8 +133,7 @@
 
         // Open Review Popup with Vehicle Name
         function openReviewPopup(vehicle) {
-            document.getElementById("reviewVehicle").textContent = vehicle;
-            document.getElementById("reviewVehicleName").value = vehicle;
+            document.getElementById("reviewVehicle").textContent = vehicle + ' vehicule';
             document.getElementById("reviewPopup").classList.remove("hidden");
         }
 

@@ -8,7 +8,9 @@ CREATE TABLE categorie(id_categorie int(11) AUTO_INCREMENT PRIMARY KEY, nom varc
 
 CREATE TABLE vehicule(id_vehicule int(11) AUTO_INCREMENT PRIMARY KEY, modele varchar(255), prix float(10,2),disponibilite boolean,id_categorie int(11),FOREIGN KEY (id_categorie) REFERENCES categorie(id_categorie));
 
-CREATE TABLE Reservation(id_reservation int(11) AUTO_INCREMENT PRIMARY KEY,date_start date,date_end date,lieu_charge varchar(255),id_client int(11),id_vehicule int(11))
+CREATE TABLE Reservation (id_reservation INT(11) AUTO_INCREMENT PRIMARY KEY,date_start DATE,date_end DATE,lieu_charge VARCHAR(255),id_client INT(11),id_vehicule INT(11),FOREIGN KEY (id_client)     REFERENCES client(id_client)     ON DELETE CASCADE     ON UPDATE CASCADE,FOREIGN KEY (id_vehicule)     REFERENCES vehicule(id_vehicule)     ON DELETE CASCADE     ON UPDATE CASCADE
+);
+
 
 CREATE TABLE avis(id_avis int(11) AUTO_INCREMENT PRIMARY KEY,note int,commentaire text, date_avis date,time_avis time,id_client int,id_vehicule int, FOREIGN KEY (id_client) REFERENCES client(id_client), FOREIGN KEY (id_vehicule) REFERENCES vehicule(id_vehicule));
 
