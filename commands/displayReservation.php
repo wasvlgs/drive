@@ -28,17 +28,37 @@
                     $getButtons = '';
                     $getColor = 'red';
                     if($reservation['statut'] === "Canfirmed"){
+
+
+                        $checkSql = "SELECT * FROM avis WHERE id_client = :idclient AND id_vehicule = :idvehicule";
+                        $checkAvis = $this->database->prepare($checkSql);
+                        $checkAvis->bindParam(":idclient",$this->idClient);
+                        $checkAvis->bindParam(":idvehicule",$reservation['id_vehicule']);
+                        if($checkAvis->execute()){
+                            if($checkAvis->rowCount() === 0){
+                                $getButtons = '<form method="POST"><button type="button" onclick="openModifyPopup(`'.$reservation['lieu_charge'].'`, `'.$reservation['date_start'].'`, `'.$reservation['date_end'].'`,'.$reservation['id_reservation'].')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Modify</button>
+                                <button value="'.$reservation['id_reservation'].'" name="delete" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cancel</button>
+                                <button type="button" onclick="openReviewPopup(`'.$reservation['name'].'`,'.$reservation['id_vehicule'].')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Set Review</button></form>';
+                            }else{
+                                $getButtons = '<form method="POST"><button type="button" onclick="openModifyPopup(`'.$reservation['lieu_charge'].'`, `'.$reservation['date_start'].'`, `'.$reservation['date_end'].'`,'.$reservation['id_reservation'].')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Modify</button>
+                                <button value="'.$reservation['id_reservation'].'" name="delete" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cancel</button></form>';
+                            }
+                        }else{
+                            echo '<script>alert("Error try again")</script>';
+                        }
+
+
+
+
                         $getColor = 'green';
-                        $getButtons = '<button onclick="openModifyPopup(`'.$reservation['lieu_charge'].'`, `'.$reservation['date_start'].'`, `'.$reservation['date_end'].'`,'.$reservation['id_reservation'].')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Modify</button>
-                                <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cancel</button>
-                                <button onclick="openReviewPopup(`'.$reservation['name'].'`)" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Set Review</button>';
+                        
                     }else if($reservation['statut'] === "Pending"){
                         $getColor = 'yellow';
-                        $getButtons = '<button onclick="openModifyPopup(`'.$reservation['lieu_charge'].'`, `'.$reservation['date_start'].'`, `'.$reservation['date_end'].'`,'.$reservation['id_reservation'].')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Modify</button>
-                                <button name="delete" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cancel</button>';
+                        $getButtons = '<form method="POST"><button type="button" onclick="openModifyPopup(`'.$reservation['lieu_charge'].'`, `'.$reservation['date_start'].'`, `'.$reservation['date_end'].'`,'.$reservation['id_reservation'].')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Modify</button>
+                                <button value="'.$reservation['id_reservation'].'" name="delete" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cancel</button></form>';
                     }else if($reservation['statut'] === "Rejected"){
                         $getColor = 'red';
-                        $getButtons = '<button name="delete" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>';
+                        $getButtons = '<form method="POST"><button value="'.$reservation['id_reservation'].'" name="delete" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button></form>';
                     }
                     
                     echo '<tr class="border-b">
@@ -72,7 +92,7 @@
                     $editFunction->bindParam(":place",$lieu);
                     $editFunction->bindParam(":getId",$getId);
                     if($editFunction->execute()){
-                        echo '<script>Location.replace("reservation.php")</script>';
+                        echo '<script>location.replace("reservation.php")</script>';
                     }else{
                         echo 'Faild to edit try again';
                     }
@@ -89,6 +109,25 @@
         public function deleteReserve($getId){
             $deleteFunction = $this->database->prepare("DELETE FROM reservation WHERE id_reservation = :getID");
             $deleteFunction->bindParam(":getID",$getId);
+            if($deleteFunction->execute()){
+                echo '<script>location.replace("reservation.php")</script>';
+            }else{
+                echo '<script>alert("Error try again")</script>';
+            }
+        }
+
+
+        public function addReview($getNote,$getDesc,$getClient,$getVecule){
+            $addReview = $this->database->prepare("INSERT INTO avis(note,commentaire,date_avis,time_avis,id_client,id_vehicule) VALUES(:note,:description,CURRENT_DATE,CURRENT_TIME,:idClient,:idVecule)");
+            $addReview->bindParam(":note",$getNote);
+            $addReview->bindParam(":description",$getDesc);
+            $addReview->bindParam(":idClient",$getClient);
+            $addReview->bindParam(":idVecule",$getVecule);
+            if($addReview->execute()){
+                echo '<script>location.replace("reservation.php")</script>';
+            }else{
+                echo '<script>alert("Error try again")</script>';
+            }
         }
         
         

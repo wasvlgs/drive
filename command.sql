@@ -17,3 +17,6 @@ CREATE TABLE avis(id_avis int(11) AUTO_INCREMENT PRIMARY KEY,note int,commentair
 ALTER TABLE Reservation ADD CONSTRAINT vehicule FOREIGN KEY (id_vehicule) REFERENCES vehicule(id_vehicule) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE client ADD CONSTRAINT role FOREIGN KEY (role) REFERENCES role(id_role) ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+INSERT INTO avis(note,commentaire,date_avis,time_avis,id_client,id_vehicule) VALUES(5,"i very like the service",CURRENT_DATE,CURRENT_TIME,2,1)

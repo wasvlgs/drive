@@ -41,18 +41,40 @@
                             $getReservation->displayReservationClient();
                             
 
-                            if($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['edit']) && !empty($_POST['edit'])){
+                            if($_SERVER['REQUEST_METHOD'] === "POST"){
 
-                                $getPlace = htmlspecialchars(trim($_POST['lieu']));
-                                $getStart = htmlspecialchars(trim($_POST['pickupDate']));
-                                $getEnd = htmlspecialchars(trim($_POST['returnDate']));
-                                $getReserveId = htmlspecialchars(trim($_POST['edit']));
+                                if(isset($_POST['edit']) && !empty($_POST['edit'])){
+                                    $getPlace = htmlspecialchars(trim($_POST['lieu']));
+                                    $getStart = htmlspecialchars(trim($_POST['pickupDate']));
+                                    $getEnd = htmlspecialchars(trim($_POST['returnDate']));
+                                    $getReserveId = htmlspecialchars(trim($_POST['edit']));
 
-                                if(!empty($getPlace) && !empty($getStart) && !empty($getEnd) && !empty($getReserveId)){
-                                    $getReservation->editReserve($getPlace,$getStart,$getEnd,$getReserveId);
-                                }else{
-                                    echo '<script>alert("Invalid informations")</script>';
+                                    if(!empty($getPlace) && !empty($getStart) && !empty($getEnd) && !empty($getReserveId)){
+                                        $getReservation->editReserve($getPlace,$getStart,$getEnd,$getReserveId);
+                                    }else{
+                                        echo '<script>alert("Invalid informations!")</script>';
+                                    }
                                 }
+                                if(isset($_POST['delete']) && !empty($_POST['delete'])){
+                                    $getReserveId2 = htmlspecialchars(trim($_POST['delete']));
+                                    if(!empty($getReserveId2)){
+                                        $getReservation->deleteReserve($getReserveId2);
+                                    }
+                                }
+
+                                if(isset($_POST['review']) && !empty($_POST['review'])){
+                                    $getRate = htmlspecialchars(trim($_POST['rating']));
+                                    $getReviewText = htmlspecialchars(trim($_POST['reviewText']));
+                                    $vehiculeId = htmlspecialchars(trim($_POST['review']));
+                                    $getClient = $getID;
+                                    if(!empty($getRate) && !empty($getReviewText) && !empty($vehiculeId) && ($getRate === '1' || $getRate === '2' || $getRate === '3' || $getRate === '4' || $getRate === '5' )){
+                                        $getReservation->addReview($getRate,$getReviewText,$getClient,$vehiculeId);
+                                    }else{
+                                        echo '<script>alert("Invalid review!")</script>';
+                                    }
+
+                                }
+                                
                             }
 
 
@@ -93,7 +115,7 @@
     <div id="reviewPopup" class="fixed hidden flex justify-content items-center inset-0 bg-gray-800 bg-opacity-50 justify-center items-center">
         <div class="bg-white rounded-lg p-6 w-full max-w-lg">
             <h3 class="text-2xl font-semibold mb-4">Set Review for <span id="reviewVehicle"></span></h3>
-            <form action="submit-review.php" method="POST">
+            <form method="POST">
                 <div class="mb-4">
                     <label for="reviewRating" class="block text-gray-700">Rating</label>
                     <select id="reviewRating" name="rating" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
@@ -110,11 +132,15 @@
                 </div>
                 <div class="flex justify-end space-x-4">
                     <button type="button" onclick="closeReviewPopup()" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">Cancel</button>
-                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Submit Review</button>
+                    <button id="review" name="review" type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Submit Review</button>
                 </div>
             </form>
         </div>
     </div>
+
+
+
+    
 
     <script>
         // Open Modify Popup with Pre-filled Data
@@ -132,9 +158,10 @@
         }
 
         // Open Review Popup with Vehicle Name
-        function openReviewPopup(vehicle) {
+        function openReviewPopup(vehicle,id) {
             document.getElementById("reviewVehicle").textContent = vehicle + ' vehicule';
             document.getElementById("reviewPopup").classList.remove("hidden");
+            document.getElementById("review").value = id;
         }
 
         // Close Review Popup
