@@ -10,6 +10,8 @@
     <!-- Header -->
     <?php
             require_once '../commands/header.php';
+            require_once '../commands/afficher.php';
+            $callFunctions = new VehiculePagination($conn->getConnect());
          ?>
 
         <!-- Main Content Area -->
@@ -20,68 +22,94 @@
                 
                 <!-- Filter Options (Optional) -->
                 <div class="mb-6">
-                    <div class="flex gap-4">
-                        <select class="p-2 border rounded">
+                    <form method="POST" class="flex gap-4">
+                        <select name="option" class="p-2 border rounded">
                             <option value="">All Categories</option>
-                            <option value="sedan">Sedan</option>
-                            <option value="suv">SUV</option>
-                            <option value="convertible">Convertible</option>
+                            <?php $callFunctions->getCategories(); ?>
                         </select>
 
-                        <select class="p-2 border rounded">
-                            <option value="">Sort by Price</option>
-                            <option value="low-high">Low to High</option>
-                            <option value="high-low">High to Low</option>
-                        </select>
-                    </div>
+                        <button name="filter" class="flex items-center justify-center px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300">Filter</button>
+                    </form>
                 </div>
 
                 <!-- Vehicle List -->
                 <div id="afficher" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                    <!-- Vehicle Card -->
-                    <!-- <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                        <img src="car1.jpg" alt="Luxury Sedan" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <h3 class="text-xl font-bold">Luxury Sedan</h3>
-                            <p class="text-gray-600">Starting at $50/day</p>
-                            <a href="vehicle-details.html" class="text-blue-600 hover:underline">View Details</a>
-                            <br>
-                            <a href="reservation.html" class="mt-4 block text-center py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Reserve Now</a>
-                        </div>
-                    </div>
-
-                    
-                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                        <img src="car2.jpg" alt="SUV" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <h3 class="text-xl font-bold">SUV</h3>
-                            <p class="text-gray-600">Starting at $75/day</p>
-                            <a href="vehicle-details.html" class="text-blue-600 hover:underline">View Details</a>
-                            <br>
-                            <a href="reservation.html" class="mt-4 block text-center py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Reserve Now</a>
-                        </div>
-                    </div>
-
-                    
-                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                        <img src="car3.jpg" alt="Convertible" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <h3 class="text-xl font-bold">Convertible</h3>
-                            <p class="text-gray-600">Starting at $90/day</p>
-                            <a href="vehicle-details.html" class="text-blue-600 hover:underline">View Details</a>
-                            <br>
-                            <a href="reservation.html" class="mt-4 block text-center py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Reserve Now</a>
-                        </div>
-                    </div> -->
-
-                    <!-- More Vehicle Cards Here... -->
+                    <?php 
+                        $getOffset;
+                        if(isset($_GET['page']) && !empty(trim($_GET['page']))){
+                            $getOffset = htmlspecialchars(trim($_GET['page']));
+                        }else{
+                            $getOffset = 0;
+                        }
+                        $getFilter = '';
+                        if(isset($_POST['filter'])){
+                            $getFilter = htmlspecialchars(trim($_POST['option']));
+                        }
+                        $data = $callFunctions->getVehicules(3,$getOffset,$getFilter);
+                        $getData = $data['getData'];
+                        foreach($getData as $item){
+                            echo '<div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                             <img src="../img/imgPages/'.$item['imgSrc'].'" alt="SUV" class="w-full h-40 object-cover">
+                             <div class="p-4">
+                                 <h3 class="text-xl font-bold">'.$item['name'].'</h3>
+                                 <p class="text-gray-600">Starting at $'.$item['prix'].'/day</p>
+                                 <h6 class="text-lg text-blue-600">'.$item['modele'].'</h6>
+                                 <a target="_blank" href="../cars/car.php?car='.$item['id_vehicule'].'" class="mt-4 block text-center py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Reserve Now</a>
+                             </div>
+                         </div>';
+                        }
+                    ?>
                 </div>
+
+
 
                 <!-- Pagination Section -->
                     <div class="mt-8 flex justify-center">
                         <nav aria-label="Pagination">
                             <ul id="buttonsAffichage" class="flex items-center space-x-4">
+                                
+                                <?php
+
+                                if(isset($_GET['page'])){
+                                    if($_GET['page'] > 1){
+                                    echo '<li>
+                                    <a href="explore.php?page='.($_GET['page'] - 1).'" class="flex items-center justify-center px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300">
+                                        ← Previous
+                                    </a>
+                                    </li>';
+                                    }
+                                    
+
+                                        for($i = 1; $i <= $data['totalPages']; $i++){
+                                            echo '<li>
+                                        <a href="explore.php?page='.$i.'" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300">'.$i.'</a>
+                                    </li>';
+                                        }
+
+                                        if($_GET['page'] == 1){
+                                            echo '<li>
+                                        <a href="explore.php?page='.($_GET['page'] + 1).'" class="flex items-center justify-center px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300">
+                                            Next →
+                                        </a>
+                                    </li>';
+                                        }
+                                
+                                }else{
+                                    for($i = 1; $i <= $data['totalPages']; $i++){
+                                        echo '<li>
+                                    <a href="explore.php?page='.$i.'" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300">'.$i.'</a>
+                                </li>';
+                                    }
+
+                                        echo '<li>
+                                    <a href="explore.php?page=2" class="flex items-center justify-center px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300">
+                                        Next →
+                                    </a>
+                                </li>';
+                                }
+                                
+                                
+                                ?>
                                 <!-- Previous Button -->
                                 <!-- <li>
                                     <a href="#" class="flex items-center justify-center px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300">
@@ -117,36 +145,36 @@
         </main>
     </div>
     <script>
-    document.addEventListener("DOMContentLoaded",()=>{
-        let afficherSection = document.getElementById("afficher");
-        let buttonsAffichage = document.getElementById("buttonsAffichage");
-        fetch('../commands/afficher.php')
-        .then(response => response.json())
-        .then(data=>{
-        afficherSection.innerHTML = '';
-            if(data.getData.length > 0){
-                data.getData.forEach(element => {
-                afficherSection.innerHTML += `<div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                        <img src="../img/imgPages/${element.imgSrc}" alt="SUV" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <h3 class="text-xl font-bold">${element.name}</h3>
-                            <p class="text-gray-600">Starting at $${element.prix}/day</p>
-                            <h6 class="text-lg text-blue-600">${element.modele}</h6>
-                            <a target="_blank" href="../cars/car.php?car=${element.id_vehicule}" class="mt-4 block text-center py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Reserve Now</a>
-                        </div>
-                    </div>`;
-                });
-            }
+    // document.addEventListener("DOMContentLoaded",()=>{
+    //     let afficherSection = document.getElementById("afficher");
+    //     let buttonsAffichage = document.getElementById("buttonsAffichage");
+    //     fetch('../commands/afficher.php')
+    //     .then(response => response.json())
+    //     .then(data=>{
+    //     afficherSection.innerHTML = '';
+    //         if(data.getData.length > 0){
+    //             data.getData.forEach(element => {
+    //             afficherSection.innerHTML += `<div class="bg-white shadow-lg rounded-lg overflow-hidden">
+    //                     <img src="../img/imgPages/${element.imgSrc}" alt="SUV" class="w-full h-40 object-cover">
+    //                     <div class="p-4">
+    //                         <h3 class="text-xl font-bold">${element.name}</h3>
+    //                         <p class="text-gray-600">Starting at $${element.prix}/day</p>
+    //                         <h6 class="text-lg text-blue-600">${element.modele}</h6>
+    //                         <a target="_blank" href="../cars/car.php?car=${element.id_vehicule}" class="mt-4 block text-center py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">Reserve Now</a>
+    //                     </div>
+    //                 </div>`;
+    //             });
+    //         }
 
-            for(let i = 1; i <= data.totalPages; i++){
-                buttonsAffichage.innerHTML += `<li>
-                    <a href="explore.php?page=${i}" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300">${i}</a>
-                </li>`;
-            }
+    //         for(let i = 1; i <= data.totalPages; i++){
+    //             buttonsAffichage.innerHTML += `<li>
+    //                 <a href="explore.php?page=${i}" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300">${i}</a>
+    //             </li>`;
+    //         }
             
-        })
+    //     })
         
-    })
+    // })
 
     </script>
 </body>

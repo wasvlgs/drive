@@ -26,7 +26,7 @@
                             <td class="py-4 px-6">'.$item['description'].'</td>
                             <td class="py-4 px-6 flex space-x-4">
                                 <form method="POST"><button type="button" onclick="showEditModal(`'.$item['nom'].'`, `'.$item['description'].'`,'.$item['id_categorie'].')" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-500">Modify</button>
-                                <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500">Delete</button></form>
+                                <button value="'.$item['id_categorie'].'" name="delete" type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500">Delete</button></form>
                             </td>
                         </tr>'; 
                 }
@@ -45,6 +45,28 @@
                 echo '<script>location.replace("categorie.php")</script>';
             }else{
                 echo '<script>alert("Invalid information!")</script>';
+            }
+        }
+
+        public function removeCategorie($getid){
+            $deleteCategorie = $this->database->prepare("DELETE FROM categorie WHERE id_categorie = :getID");
+            $deleteCategorie->bindParam(":getID",$getid);
+            if($deleteCategorie->execute()){
+                echo '<script>location.replace("categorie.php")</script>';
+            }else{
+                echo '<script>alert("Invalid information!")</script>';
+            }
+        }
+
+        public function addCategorie($name,$desc){
+            $addCategorie = $this->database->prepare("INSERT INTO categorie(nom,description)
+             VALUES(:name,:desc)");
+             $addCategorie->bindParam(":name",$name);
+             $addCategorie->bindParam(":desc",$desc);
+            if($addCategorie->execute()){
+                echo '<script>location.replace("categorie.php")</script>';
+            }else{
+                echo '<script>alert("Error try again!")</script>';
             }
         }
     }

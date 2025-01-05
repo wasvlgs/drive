@@ -86,7 +86,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $callFunction->showReservation(); ?>
+                        <?php $callFunction->showAllReservation(); ?>
 
                     </tbody>
                 </table>
@@ -96,18 +96,8 @@
             <section id="reviews">
                 <h2 class="text-3xl font-bold text-gray-800 mb-4">My Reviews</h2>
                 <div class="space-y-4">
-                    <?php $callFunction->showReviews(); ?>
-                    <!-- Review Item -->
-                    <!-- <div class="bg-white shadow-lg rounded-lg p-6">
-                        <h3 class="font-bold text-gray-800">Luxury Sedan</h3>
-                        <p class="text-gray-600">"Great car! Smooth ride and very comfortable."</p>
-                        <div class="text-yellow-500 mt-2">★★★★★</div>
-                    </div>
-                    <div class="bg-white shadow-lg rounded-lg p-6">
-                        <h3 class="font-bold text-gray-800">SUV</h3>
-                        <p class="text-gray-600">"Perfect for family trips. Spacious and reliable."</p>
-                        <div class="text-yellow-500 mt-2">★★★★☆</div>
-                    </div> -->
+                    <?php $callFunction->showReviews() ?>
+                    
                 </div>
             </section>
         </main>

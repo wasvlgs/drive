@@ -26,6 +26,26 @@
                     echo '<script>alert("Invalid information!")</script>';
                 }
             }
+
+            if(isset($_POST['delete']) && !empty($_POST['delete'])){
+                $getIdCategorie = htmlspecialchars(trim($_POST['delete']));
+                if(!empty($getIdCategorie)){
+                    $callFunctions->removeCategorie($getIdCategorie);
+                }else{
+                    echo 'alert("Invalid categorie")';
+                }
+            }
+
+
+            if(isset($_POST['addCategorie'])){
+                $nameCategorie = htmlspecialchars(trim($_POST['nameCategorie']));
+                $descCategorie = htmlspecialchars(trim($_POST['descCategorie']));
+                if(!empty($nameCategorie) && !empty($descCategorie)){
+                    $callFunctions->addCategorie($nameCategorie,$descCategorie);
+                }else{
+                    echo '<script>alert("Error try again!")</script>';
+                }
+            }
         }
     ?>
 
@@ -61,35 +81,36 @@
     <div id="addCategoryModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" style="display: none;">
         <div class="bg-white p-6 rounded-lg w-96">
             <h3 class="text-2xl font-semibold text-gray-800 mb-4">Add New Category</h3>
-            <form>
+            <form method="POST">
                 <div class="mb-4">
                     <label for="category-name" class="block text-gray-700">Category Name</label>
-                    <input type="text" id="category-name" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter category name" required>
+                    <input name="nameCategorie" type="text" id="category-name" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter category name" required>
                 </div>
                 <div class="mb-4">
                     <label for="category-description" class="block text-gray-700">Description</label>
-                    <input type="text" id="category-description" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter category description" required>
+                    <input name="descCategorie" type="text" id="category-description" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter category description" required>
                 </div>
                 <div class="flex justify-end">
                     <button type="button" onclick="closeAddModal()" class="px-4 py-2 mr-4 bg-gray-400 text-white rounded-md">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Add Category</button>
+                    <button name="addCategorie" type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Add Category</button>
                 </div>
             </form>
         </div>
     </div>
 
+
     <!-- Edit Category Modal -->
     <div id="editCategoryModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" style="display: none;">
         <div class="bg-white p-6 rounded-lg w-96">
             <h3 class="text-2xl font-semibold text-gray-800 mb-4">Edit Category</h3>
-            <form>
+            <form method="POST">
                 <div class="mb-4">
                     <label for="edit-category-name" class="block text-gray-700">Category Name</label>
-                    <input type="text" id="edit-category-name" class="w-full p-2 border border-gray-300 rounded-md" required>
+                    <input name="newName" type="text" id="edit-category-name" class="w-full p-2 border border-gray-300 rounded-md" required>
                 </div>
                 <div class="mb-4">
                     <label for="edit-category-description" class="block text-gray-700">Description</label>
-                    <input type="text" id="edit-category-description" class="w-full p-2 border border-gray-300 rounded-md" required>
+                    <input name="newDesc" type="text" id="edit-category-description" class="w-full p-2 border border-gray-300 rounded-md" required>
                 </div>
                 <div class="flex justify-end">
                     <button type="button" onclick="closeEditModal()" class="px-4 py-2 mr-4 bg-gray-400 text-white rounded-md">Cancel</button>
