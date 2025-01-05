@@ -9,7 +9,22 @@
 <body class="bg-gray-100">
 
     <!-- Header -->
-    <?php require_once '../commands/headerAdmin.php'; ?>
+    <?php require_once '../commands/headerAdmin.php'; 
+        require_once '../commands/manageReview.php';
+        $callFunctions = new manageReview($conn->getConnect());
+
+
+        if($_SERVER['REQUEST_METHOD'] === "POST"){
+            if(isset($_POST['delete']) && !empty($_POST['delete'])){
+                $getIdReview = htmlspecialchars(trim($_POST['delete']));
+                if(!empty($getIdReview)){
+                    $callFunctions->deleteReview($getIdReview);
+                }else{
+                    echo 'Invalid review!';
+                }
+            }
+        }
+    ?>
 
         <!-- Main Content Area -->
         <main class="flex-1 p-6">
@@ -25,35 +40,12 @@
                             <th class="py-3 px-6">Vehicle</th>
                             <th class="py-3 px-6">Rating</th>
                             <th class="py-3 px-6">Review</th>
-                            <th class="py-3 px-6">Status</th>
+                            <th class="py-3 px-6">Date</th>
                             <th class="py-3 px-6">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Example Review Row (Loop through reviews here) -->
-                        <tr>
-                            <td class="py-4 px-6">John Doe</td>
-                            <td class="py-4 px-6">Luxury Sedan</td>
-                            <td class="py-4 px-6">5 Stars</td>
-                            <td class="py-4 px-6">Great vehicle! Loved the comfort.</td>
-                            <td class="py-4 px-6" id="status-1">Pending</td>
-                            <td class="py-4 px-6 flex space-x-4">
-                                <button onclick="approveReview(1)" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500">Approve</button>
-                                <button onclick="deleteReview(1)" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500">Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 px-6">Jane Smith</td>
-                            <td class="py-4 px-6">Sports Car</td>
-                            <td class="py-4 px-6">4 Stars</td>
-                            <td class="py-4 px-6">Really fast and fun to drive!</td>
-                            <td class="py-4 px-6" id="status-2">Pending</td>
-                            <td class="py-4 px-6 flex space-x-4">
-                                <button onclick="approveReview(2)" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500">Approve</button>
-                                <button onclick="deleteReview(2)" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500">Delete</button>
-                            </td>
-                        </tr>
-                        <!-- More review rows would be added here -->
+                        <?php echo $callFunctions->showReviews(); ?>
                     </tbody>
                 </table>
             </section>

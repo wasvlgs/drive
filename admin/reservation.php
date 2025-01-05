@@ -9,13 +9,33 @@
 <body class="bg-gray-100">
 
     <!-- Header -->
-    <?php require_once '../commands/headerAdmin.php'; ?>
+    <?php require_once '../commands/headerAdmin.php';
+        require_once '../commands/manageReservation.php';
+        $callFunctions = new manageReservation($conn->getConnect());
+
+
+
+
+
+        if($_SERVER['REQUEST_METHOD'] === "POST"){
+            if(isset($_POST['confirm']) && !empty($_POST['confirm'])){
+                $getIdReserve = htmlspecialchars(trim($_POST['confirm']));
+                $callFunctions->confirmReservation($getIdReserve);
+            }
+
+            if(isset($_POST['cancel']) && !empty($_POST['cancel'])){
+                $getIdReserve = htmlspecialchars(trim($_POST['cancel']));
+                $callFunctions->rejectReservation($getIdReserve);
+            }
+        }
+     ?>
+
 
         <!-- Main Content Area -->
         <main class="flex-1 p-6">
             <!-- Manage Reservations Section -->
             <section id="manage-reservations" class="mb-12">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6">Manage Reservations</h2>
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Pending Reservations</h2>
 
                 <!-- Reservation Table -->
                 <table class="min-w-full bg-white border-collapse shadow-lg rounded-lg">
@@ -29,18 +49,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Example Reservation Row (Loop through reservations here) -->
-                        <tr>
-                            <td class="py-4 px-6">John Doe</td>
-                            <td class="py-4 px-6">Luxury Sedan</td>
-                            <td class="py-4 px-6">2024-01-10</td>
-                            <td class="py-4 px-6">Pending</td>
-                            <td class="py-4 px-6 flex space-x-4">
-                                <button onclick="confirmReservation(this)" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500">Confirm</button>
-                                <button onclick="cancelReservation(this)" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500">Cancel</button>
-                            </td>
+                        <?php $callFunctions->showPenReservation();  ?>
+                    </tbody>
+                </table>
+            </section>
+
+
+
+            <section id="manage-reservations" class="mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Confirmed Reservations</h2>
+
+                <!-- Reservation Table -->
+                <table class="min-w-full bg-white border-collapse shadow-lg rounded-lg">
+                    <thead>
+                        <tr class="bg-blue-600 text-white">
+                            <th class="py-3 px-6">Customer Name</th>
+                            <th class="py-3 px-6">Vehicle</th>
+                            <th class="py-3 px-6">Reservation Date</th>
+                            <th class="py-3 px-6">Status</th>
+                            <th class="py-3 px-6">Actions</th>
                         </tr>
-                        <!-- More reservation rows would be added here -->
+                    </thead>
+                    <tbody>
+                        <?php $callFunctions->showActReservation();  ?>
                     </tbody>
                 </table>
             </section>

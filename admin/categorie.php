@@ -9,7 +9,25 @@
 <body class="bg-gray-100">
 
     <!-- Header -->
-    <?php require_once '../commands/headerAdmin.php'; ?>
+    <?php require_once '../commands/headerAdmin.php';
+        require_once '../commands/manageCategorie.php';
+        $callFunctions = new manageCategories($conn->getConnect());
+
+
+        if($_SERVER['REQUEST_METHOD'] === "POST"){
+            if(isset($_POST['updateCategorie']) && !empty($_POST['updateCategorie'])){
+                $newName = htmlspecialchars(trim($_POST['newName']));
+                $newDesc = htmlspecialchars(trim($_POST['newDesc']));
+                $idCategorie = htmlspecialchars(trim($_POST['updateCategorie']));
+
+                if(!empty($newName) && !empty($newDesc) && !empty($idCategorie)){
+                    $callFunctions->editCategorie($newName,$newDesc,$idCategorie);
+                }else{
+                    echo '<script>alert("Invalid information!")</script>';
+                }
+            }
+        }
+    ?>
 
         <!-- Main Content Area -->
         <main class="flex-1 p-6">
@@ -32,23 +50,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Example Category Row (Loop through categories here) -->
-                        <tr>
-                            <td class="py-4 px-6">SUV</td>
-                            <td class="py-4 px-6">Sport Utility Vehicles</td>
-                            <td class="py-4 px-6 flex space-x-4">
-                                <button onclick="showEditModal('SUV', 'Sport Utility Vehicles')" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-500">Modify</button>
-                                <button onclick="deleteCategory('SUV')" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500">Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 px-6">Sedan</td>
-                            <td class="py-4 px-6">Comfortable and efficient cars</td>
-                            <td class="py-4 px-6 flex space-x-4">
-                                <button onclick="showEditModal('Sedan', 'Comfortable and efficient cars')" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-500">Modify</button>
-                                <button onclick="deleteCategory('Sedan')" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500">Delete</button>
-                            </td>
-                        </tr>
+                        <?php echo $callFunctions->getCategorie(); ?>
                     </tbody>
                 </table>
             </section>
@@ -91,7 +93,7 @@
                 </div>
                 <div class="flex justify-end">
                     <button type="button" onclick="closeEditModal()" class="px-4 py-2 mr-4 bg-gray-400 text-white rounded-md">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Update Category</button>
+                    <button id="updateCategorie" name="updateCategorie" type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Update Category</button>
                 </div>
             </form>
         </div>
@@ -109,9 +111,10 @@
         }
 
         // Show Edit Category Modal with prefilled data
-        function showEditModal(categoryName, categoryDescription) {
+        function showEditModal(categoryName, categoryDescription, getID) {
             document.getElementById("edit-category-name").value = categoryName;
             document.getElementById("edit-category-description").value = categoryDescription;
+            document.getElementById("updateCategorie").value = getID;
             document.getElementById("editCategoryModal").style.display = "flex";
         }
 
