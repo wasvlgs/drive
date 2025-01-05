@@ -5,31 +5,35 @@
 
     session_start();
 
+    if(isset($_GET['car']) && !empty($_GET['car'])){
+        class getCar{
 
-    class getCar{
+                private $carId;
+                private $database;
 
-        private $carId;
-        private $database;
-
-        public function __construct($db)
-        {
-            $this->carId = $_GET['car'];
-            $this->database = $db;
-        }
+                public function __construct($db)
+                {
+                    $this->carId = $_GET['car'];
+                    $this->database = $db;
+                }
 
 
-        public function getInformation(){
+                public function getInformation(){
 
-            $sql = "SELECT * FROM vehicule INNER JOIN categorie ON vehicule.id_categorie = categorie.id_categorie WHERE id_vehicule = :vehicule";
-            $getInfo = $this->database->prepare($sql);
-            $getInfo->bindParam(":vehicule",$this->carId);
-            if($getInfo->execute() && $getInfo->rowCount() === 1){
-                return $getInfo->fetch(PDO::FETCH_ASSOC);
-            }else{
-                die("No car exict!");
+                    $sql = "SELECT * FROM vehicule INNER JOIN categorie ON vehicule.id_categorie = categorie.id_categorie WHERE id_vehicule = :vehicule";
+                    $getInfo = $this->database->prepare($sql);
+                    $getInfo->bindParam(":vehicule",$this->carId);
+                    if($getInfo->execute() && $getInfo->rowCount() === 1){
+                        return $getInfo->fetch(PDO::FETCH_ASSOC);
+                    }else{
+                        die("No car exict!");
+                    }
+                }
             }
-        }
-    }
+
+
+
+    
 
 
     include_once '../database.php';
@@ -37,7 +41,9 @@
     $connCard = new getCar($conn->getConnect());
 
     $data = $connCard->getInformation();
-
+    }else{
+        die("No car exict!");
+    }
 
 
 ?>

@@ -9,29 +9,7 @@
 <body class="bg-gray-100">
 
     <!-- Header -->
-    <header class="bg-blue-600 text-white p-4 shadow-md">
-        <div class="flex justify-between items-center">
-            <!-- Greeting -->
-            <div class="text-xl font-semibold">Welcome, Admin</div>
-            <!-- Logout Link -->
-            <a href="logout.html" class="text-white hover:text-blue-300">🚪 Logout</a>
-        </div>
-    </header>
-
-    <div class="flex">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-blue-600 text-white min-h-screen p-6">
-            <h1 class="text-2xl font-bold mb-6">Drive & Loc</h1>
-            <nav>
-                <ul class="space-y-4">
-                    <li><a href="dashboard.html" class="block hover:text-blue-300">🏠 Dashboard</a></li>
-                    <li><a href="manage-vehicles.html" class="block hover:text-blue-300">🚗 Manage Vehicles</a></li>
-                    <li><a href="manage-reservations.html" class="block hover:text-blue-300">🛣️ Manage Reservations</a></li>
-                    <li><a href="manage-reviews.html" class="block hover:text-blue-300">📝 Manage Reviews</a></li>
-                    <li><a href="manage-categories.html" class="block hover:text-blue-300">📂 Manage Categories</a></li>
-                </ul>
-            </nav>
-        </aside>
+    <?php require_once '../commands/headerAdmin.php'; ?>
 
         <!-- Main Content Area -->
         <main class="flex-1 p-6">

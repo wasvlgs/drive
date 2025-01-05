@@ -47,9 +47,9 @@
 <header class="bg-blue-600 text-white p-4 shadow-md">
         <div class="flex justify-between items-center">
             <!-- Greeting -->
-            <div class="text-xl font-semibold">Welcome to admin <?php echo $getName; ?></div>
+            <div class="text-xl font-semibold">Welcome to control section, <?php echo $getName; ?>!</div>
             <!-- Logout Link -->
-            <a href="logout.html" class="text-white hover:text-blue-300">🚪 Logout</a>
+            <form method="post"><button name="logout" href="logout.html" class="text-white hover:text-blue-300">🚪 Logout</button></form>
         </div>
     </header>
 
@@ -59,11 +59,11 @@
             <h1 class="text-2xl font-bold mb-6">Drive & Loc</h1>
             <nav>
                 <ul class="space-y-4">
-                    <li><a href="dashboard.html" class="block hover:text-blue-300">🏠 Dashboard</a></li>
-                    <li><a href="manage-vehicles.html" class="block hover:text-blue-300">🚗 Manage Vehicles</a></li>
-                    <li><a href="manage-reservations.html" class="block hover:text-blue-300">🛣️ Manage Reservations</a></li>
-                    <li><a href="manage-reviews.html" class="block hover:text-blue-300">📝 Manage Reviews</a></li>
-                    <li><a href="manage-categories.html" class="block hover:text-blue-300">📂 Manage Categories</a></li>
+                    <li><a href="dashboard.php" class="block hover:text-blue-300">🏠 Dashboard</a></li>
+                    <li><a href="vehicules.php" class="block hover:text-blue-300">🚗 Manage Vehicles</a></li>
+                    <li><a href="reservation.php" class="block hover:text-blue-300">🛣️ Manage Reservations</a></li>
+                    <li><a href="review.php" class="block hover:text-blue-300">📝 Manage Reviews</a></li>
+                    <li><a href="categorie.php" class="block hover:text-blue-300">📂 Manage Categories</a></li>
                 </ul>
             </nav>
         </aside>

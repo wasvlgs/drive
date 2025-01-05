@@ -83,7 +83,7 @@
 
         }
 
-        public function showReservation(){
+        public function showAllReservation(){
             $getReservation = $this->database->prepare("SELECT * FROM reservation INNER JOIN vehicule ON reservation.id_vehicule = vehicule.id_vehicule WHERE reservation.id_client = :idClient ORDER BY id_reservation DESC");
             $getReservation->bindParam(":idClient",$this->idClient);
             if($getReservation->execute() && $getReservation->rowCount() > 0){

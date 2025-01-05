@@ -9,29 +9,10 @@
 <body class="bg-gray-100">
 
     <!-- Header -->
-    <header class="bg-blue-600 text-white p-4 shadow-md">
-        <div class="flex justify-between items-center">
-            <!-- Greeting -->
-            <div class="text-xl font-semibold">Welcome, Admin</div>
-            <!-- Logout Link -->
-            <a href="logout.html" class="text-white hover:text-blue-300">🚪 Logout</a>
-        </div>
-    </header>
-
-    <div class="flex">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-blue-600 text-white min-h-screen p-6">
-            <h1 class="text-2xl font-bold mb-6">Drive & Loc</h1>
-            <nav>
-                <ul class="space-y-4">
-                    <li><a href="dashboard.html" class="block hover:text-blue-300">🏠 Dashboard</a></li>
-                    <li><a href="manage-vehicles.html" class="block hover:text-blue-300">🚗 Manage Vehicles</a></li>
-                    <li><a href="manage-reservations.html" class="block hover:text-blue-300">🛣️ Manage Reservations</a></li>
-                    <li><a href="manage-reviews.html" class="block hover:text-blue-300">📝 Manage Reviews</a></li>
-                    <li><a href="manage-categories.html" class="block hover:text-blue-300">📂 Manage Categories</a></li>
-                </ul>
-            </nav>
-        </aside>
+    <?php require_once '../commands/headerAdmin.php'; 
+        require_once '../commands/vehicule.php';
+        $callFunctions = new manageVehicle($conn->getConnect());
+    ?>
 
         <!-- Main Content Area -->
         <main class="flex-1 p-6">
@@ -44,7 +25,6 @@
                     <button onclick="openAddModal()" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-500">+ Add New Vehicle</button>
                 </div>
 
-                <!-- Vehicles Table -->
                 <table class="min-w-full bg-white border-collapse shadow-lg rounded-lg">
                     <thead>
                         <tr class="bg-blue-600 text-white">
@@ -56,17 +36,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Example Vehicle Row (Loop through vehicles here) -->
-                        <tr>
-                            <td class="py-4 px-6">Luxury Sedan</td>
-                            <td class="py-4 px-6">Sedan</td>
-                            <td class="py-4 px-6">$50</td>
-                            <td class="py-4 px-6">Available</td>
-                            <td class="py-4 px-6 flex space-x-4">
-                                <button onclick="openEditModal('Luxury Sedan', 'Sedan', 50, 'Available')" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-500">Modify</button>
-                                <button onclick="deleteVehicle('Luxury Sedan')" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500">Delete</button>
-                            </td>
-                        </tr>
+                        <?php $callFunctions->showVehicle(); ?>
+                        
                     </tbody>
                 </table>
             </section>
@@ -77,61 +48,133 @@
     <div id="addVehicleModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
         <div class="bg-white p-6 rounded-lg w-96">
             <h3 class="text-2xl font-semibold text-gray-800 mb-4">Add New Vehicle</h3>
-            <form>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="mb-4">
+                    <label for="vehicle-image" class="block text-gray-700">Upload Image</label>
+                    <input name="imgVehicle" type="file" id="vehicle-image" class="w-full p-2 border border-gray-300 rounded-md" required>
+                </div>
                 <div class="mb-4">
                     <label for="vehicle-name" class="block text-gray-700">Vehicle Name</label>
-                    <input type="text" id="vehicle-name" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter vehicle name" required>
+                    <input name="vehicleName" type="text" id="vehicle-name" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter vehicle name" required>
+                </div>
+                <div class="mb-4">
+                    <label for="vehicle-Modele" class="block text-gray-700">Vehicle Modele</label>
+                    <input name="vehicleModele" type="text" id="vehicle-Modele" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter vehicle Medele" required>
                 </div>
                 <div class="mb-4">
                     <label for="vehicle-category" class="block text-gray-700">Category</label>
-                    <input type="text" id="vehicle-category" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter vehicle category" required>
+                    <select name="vehicleCategory" id="vehicle-category" class="w-full p-2 border border-gray-300 rounded-md">
+                        <option value="" disabled selected>   -- Select Categorie --  </option>
+                        <!-- <option value="Not Available">Sport</option> -->
+                         <?php echo $callFunctions->getCategories(); ?>
+                    </select>
                 </div>
                 <div class="mb-4">
                     <label for="vehicle-price" class="block text-gray-700">Price per Day</label>
-                    <input type="number" id="vehicle-price" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter price" required>
+                    <input name="vehiclePrice" type="number" id="vehicle-price" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter price" required>
                 </div>
                 <div class="mb-4">
                     <label for="vehicle-availability" class="block text-gray-700">Availability</label>
-                    <select id="vehicle-availability" class="w-full p-2 border border-gray-300 rounded-md">
-                        <option value="Available">Available</option>
-                        <option value="Not Available">Not Available</option>
+                    <select name="vehicleType" id="vehicle-availability" class="w-full p-2 border border-gray-300 rounded-md">
+                        <option value="1">Available</option>
+                        <option value="0">Not Available</option>
                     </select>
                 </div>
                 <div class="flex justify-end">
                     <button type="button" onclick="closeAddModal()" class="px-4 py-2 mr-4 bg-gray-400 text-white rounded-md">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Add Vehicle</button>
+                    <button name="addVehicule" type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Add Vehicle</button>
                 </div>
             </form>
         </div>
     </div>
 
+
+    <?php
+
+        if($_SERVER['REQUEST_METHOD'] === "POST"){
+            if(isset($_POST['addVehicule'])){
+                $getVehicleName = htmlspecialchars(trim($_POST['vehicleName']));
+                $getvehicleModele = htmlspecialchars(trim($_POST['vehicleModele']));
+                $getvehicleCategory = htmlspecialchars(trim($_POST['vehicleCategory']));
+                $getvehiclePrice = htmlspecialchars(trim($_POST['vehiclePrice']));
+                $getvehicleType = htmlspecialchars(trim($_POST['vehicleType']));
+                $getType;
+                $getImg = $_FILES['imgVehicle'];
+                if(!empty($getVehicleName) && !empty($getvehicleModele) && !empty($getvehicleCategory) && !empty($getvehiclePrice) && ($getvehicleType == "1" || $getvehicleType == "0") && !empty($getImg)){
+                    if($getvehicleType == '1'){
+                        $getType = true;
+                    }else if($getvehicleType == '0'){
+                        $getType = false;
+                    }
+                    $callFunctions->addVehicle($getVehicleName,$getvehicleModele,$getvehicleCategory,$getvehiclePrice,$getType,$getImg);
+                }else{
+                    echo '<script>alert("Ivalid information!")</script>';
+                }
+            }
+
+            if(isset($_POST['editVehicle']) && !empty($_POST['editVehicle'])){
+                $getName = htmlspecialchars(trim($_POST['getName']));
+                $getNewModele = htmlspecialchars(trim($_POST['newModele']));
+                $getNewCategory = htmlspecialchars(trim($_POST['NewCategory']));
+                $getNewPrix = htmlspecialchars(trim($_POST['newPrix']));
+                $getNewType = htmlspecialchars(trim($_POST['newType']));
+                $getId = htmlspecialchars(trim($_POST['editVehicle']));
+
+                if(!empty($getName) && !empty($getNewCategory) && !empty($getNewPrix) && !empty($getNewType) && !empty($getId)){
+                    $callFunctions->editVehicle($getName,$getNewModele,$getNewCategory,$getNewPrix,$getNewType,$getId);
+                }else{
+                    echo '<script>alert("Invalid information!")</script>';
+                }
+            }
+
+            if(isset($_POST['delete']) && !empty($_POST['delete'])){
+                $getId = htmlspecialchars(trim($_POST['delete']));
+                if(!empty($getId)){
+                    $callFunctions->removeVehicle($getId);
+                }else{
+                    echo '<script>alert("Invalid information!")</script>';
+                }
+            }
+        }
+    
+    
+    ?>
+
     <!-- Edit Vehicle Modal -->
     <div id="editVehicleModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
         <div class="bg-white p-6 rounded-lg w-96">
             <h3 class="text-2xl font-semibold text-gray-800 mb-4">Edit Vehicle</h3>
-            <form>
+            <form method="POST">
                 <div class="mb-4">
                     <label for="edit-vehicle-name" class="block text-gray-700">Vehicle Name</label>
-                    <input type="text" id="edit-vehicle-name" class="w-full p-2 border border-gray-300 rounded-md" required>
+                    <input name="getName" type="text" id="edit-vehicle-name" class="w-full p-2 border border-gray-300 rounded-md" required>
                 </div>
                 <div class="mb-4">
-                    <label for="edit-vehicle-category" class="block text-gray-700">Category</label>
-                    <input type="text" id="edit-vehicle-category" class="w-full p-2 border border-gray-300 rounded-md" required>
+                    <label for="edit-vehicle-modele" class="block text-gray-700">Vehicle Modele</label>
+                    <input name="newModele" type="text" id="edit-vehicle-modele" class="w-full p-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div class="mb-4">
+                <label for="edit-vehicle-category" class="block text-gray-700">Category</label>
+                <select name="NewCategory" id="edit-vehicle-category" class="w-full p-2 border border-gray-300 rounded-md">
+                        <option value="" disabled selected>   -- Select Categorie --  </option>
+                        <!-- <option value="Not Available">Sport</option> -->
+                         <?php echo $callFunctions->getCategories(); ?>
+                </select>
                 </div>
                 <div class="mb-4">
                     <label for="edit-vehicle-price" class="block text-gray-700">Price per Day</label>
-                    <input type="number" id="edit-vehicle-price" class="w-full p-2 border border-gray-300 rounded-md" required>
+                    <input name="newPrix" type="number" id="edit-vehicle-price" class="w-full p-2 border border-gray-300 rounded-md" required>
                 </div>
                 <div class="mb-4">
                     <label for="edit-vehicle-availability" class="block text-gray-700">Availability</label>
-                    <select id="edit-vehicle-availability" class="w-full p-2 border border-gray-300 rounded-md">
-                        <option value="Available">Available</option>
-                        <option value="Not Available">Not Available</option>
+                    <select name="newType" id="edit-vehicle-availability" class="w-full p-2 border border-gray-300 rounded-md">
+                        <option value="1">Available</option>
+                        <option value="0">Not Available</option>
                     </select>
                 </div>
                 <div class="flex justify-end">
                     <button type="button" onclick="closeEditModal()" class="px-4 py-2 mr-4 bg-gray-400 text-white rounded-md">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Update Vehicle</button>
+                    <button id="editVehicle" name="editVehicle" type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Update Vehicle</button>
                 </div>
             </form>
         </div>
@@ -149,11 +192,13 @@
         }
 
         // Open Edit Vehicle Modal
-        function openEditModal(name, category, price, availability) {
+        function openEditModal(name, modele, category, prix, availability,getId) {
             document.getElementById('edit-vehicle-name').value = name;
+            document.getElementById('edit-vehicle-modele').value = modele;
             document.getElementById('edit-vehicle-category').value = category;
-            document.getElementById('edit-vehicle-price').value = price;
+            document.getElementById('edit-vehicle-price').value = prix;
             document.getElementById('edit-vehicle-availability').value = availability;
+            document.getElementById('editVehicle').value = getId;
             document.getElementById('editVehicleModal').classList.remove('hidden');
         }
 

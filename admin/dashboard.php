@@ -55,19 +55,19 @@
                     <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                         <h3 class="text-xl font-bold text-blue-600">+ Add Vehicle</h3>
                         <p class="text-gray-600">Quickly add a new vehicle to the platform</p>
-                        <a href="add-vehicle.html" class="text-blue-600 hover:underline mt-4 block">Go to Add Vehicle</a>
+                        <a href="../admin/vehicules.php" class="text-blue-600 hover:underline mt-4 block">Go to Add Vehicle</a>
                     </div>
                     <!-- Manage Reservations -->
                     <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                         <h3 class="text-xl font-bold text-blue-600">Manage Reservations</h3>
                         <p class="text-gray-600">View and manage customer reservations</p>
-                        <a href="manage-reservations.html" class="text-blue-600 hover:underline mt-4 block">Go to Reservations</a>
+                        <a href="../admin/reservation.php" class="text-blue-600 hover:underline mt-4 block">Go to Reservations</a>
                     </div>
                     <!-- Manage Reviews -->
                     <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                         <h3 class="text-xl font-bold text-blue-600">Manage Reviews</h3>
                         <p class="text-gray-600">View and moderate customer reviews</p>
-                        <a href="manage-reviews.html" class="text-blue-600 hover:underline mt-4 block">Go to Reviews</a>
+                        <a href="../admin/review.php" class="text-blue-600 hover:underline mt-4 block">Go to Reviews</a>
                     </div>
                 </div>
             </section>
@@ -84,12 +84,14 @@
                             <tr class="bg-blue-600 text-white">
                                 <th class="py-3 px-6">Vehicle</th>
                                 <th class="py-3 px-6">Customer</th>
+                                <th class="py-3 px-6">Email</th>
                                 <th class="py-3 px-6">Reservation Date</th>
                                 <th class="py-3 px-6">Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="border-b">
+                            <?php echo $callFunction->showAllReservation(); ?>
+                            <!-- <tr class="border-b">
                                 <td class="py-4 px-6">Luxury Sedan</td>
                                 <td class="py-4 px-6">John Doe</td>
                                 <td class="py-4 px-6">2024-01-10</td>
@@ -100,7 +102,7 @@
                                 <td class="py-4 px-6">Jane Smith</td>
                                 <td class="py-4 px-6">2024-01-12</td>
                                 <td class="py-4 px-6 text-yellow-600">Pending</td>
-                            </tr>
+                            </tr> -->
                         </tbody>
                     </table>
                 </div>
