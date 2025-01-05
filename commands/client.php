@@ -17,16 +17,21 @@
         }
 
         public function login($email,$password){
-            $sql = "SELECT * FROM client WHERE email = :email";
+            $sql = "SELECT * FROM client INNER JOIN role ON client.role = role.id_role WHERE email = :email";
 
             $getUser = $this->database->prepare($sql);
             $getUser->bindParam(":email",$email);
             if($getUser->execute() && $getUser->rowCount() === 1){
                 $user = $getUser->fetch(PDO::FETCH_ASSOC);
-                if(password_verify($password, $user['password'])){
+                if(password_verify($password, $user['password']) && $user['name'] === 'client'){
                     session_start();
                     $_SESSION['id'] = $user['id_client'];
                     echo '<script>location.replace("../pages/dashboard.php")</script>';
+                }else if(password_verify($password, $user['password']) && $user['name'] === 'admin'){
+                    session_start();
+                    $_SESSION['id'] = $user['id_client'];
+                    $_SESSION['role'] = $user['name'];
+                    echo '<script>location.replace("../admin/dashboard.php")</script>';
                 }else{
                     echo '<script>
                         document.getElementById("email").style.border = "2px solid red";

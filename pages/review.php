@@ -20,45 +20,56 @@
                 
                 <!-- Review List -->
                 <div class="space-y-4">
-                    <!-- Review Item 1 -->
-                    <div class="bg-white shadow-lg rounded-lg p-6">
-                        <h3 class="text-xl font-semibold text-gray-800">Luxury Sedan</h3>
-                        <div class="flex items-center space-x-2">
-                            <div class="text-yellow-500">★★★★★</div>
-                            <span class="text-gray-600">(5/5)</span>
-                        </div>
-                        <p class="text-gray-600 mt-2">"Great car! Smooth ride and very comfortable. Perfect for long trips."</p>
-                        <div class="mt-4 flex justify-end space-x-4">
-                            <button onclick="openModifyReviewPopup('Luxury Sedan', 'Great car! Smooth ride and very comfortable. Perfect for long trips.', 5)" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Modify</button>
-                            <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
-                        </div>
-                    </div>
 
-                    <!-- Review Item 2 -->
-                    <div class="bg-white shadow-lg rounded-lg p-6">
-                        <h3 class="text-xl font-semibold text-gray-800">SUV</h3>
-                        <div class="flex items-center space-x-2">
-                            <div class="text-yellow-500">★★★★☆</div>
-                            <span class="text-gray-600">(4/5)</span>
-                        </div>
-                        <p class="text-gray-600 mt-2">"Perfect for family trips. Spacious and reliable, but could be smoother on highways."</p>
-                        <div class="mt-4 flex justify-end space-x-4">
-                            <button onclick="openModifyReviewPopup('SUV', 'Perfect for family trips. Spacious and reliable, but could be smoother on highways.', 4)" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Modify</button>
-                            <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</button>
-                        </div>
-                    </div>
 
-                    <!-- Additional Review Items... -->
+                    <?php 
+
+                        require_once '../commands/displayReview.php';
+                        $getReviews = new displayReview($conn->getConnect(),$getID);
+                        $getReviews->showReviews();
+
+
+                        if($_SERVER['REQUEST_METHOD'] == "POST"){
+                            if(isset($_POST['edit']) && !empty($_POST['edit'])){
+                                $getReviewId = htmlspecialchars(trim($_POST['edit']));
+                                $getDesc = htmlspecialchars(trim($_POST['reviewText']));
+                                $getNote = htmlspecialchars(trim($_POST['rating']));
+
+                                if(!empty($getReviewId) && !empty($getDesc) && !empty($getNote) && ($getNote === '1' || $getNote === '2' || $getNote === '3' || $getNote === '4' || $getNote === '5')){
+                                    $getReviews->editReview($getNote,$getDesc,$getReviewId);
+                                }else{
+                                    echo '<script>alert("Invalid information!")</script>';
+                                }
+                            }
+
+
+                            if(isset($_POST['delete'])){
+                                $getReviewId = htmlspecialchars(trim($_POST['delete']));
+
+                                if(!empty($getReviewId)){
+                                    $getReviews->removeReview($getReviewId);
+                                }else{
+                                    echo '<script>alert("Error try again!")</script>';
+                                }
+                            }
+
+                        }
+
+
+                    ?>
+
+
+
                 </div>
             </section>
         </main>
     </div>
 
     <!-- Modify Review Popup -->
-    <div id="modifyReviewPopup" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden justify-center items-center">
+    <div id="modifyReviewPopup" class="fixed hidden flex justify-center items-center inset-0 bg-gray-800 bg-opacity-50 justify-center items-center">
         <div class="bg-white rounded-lg p-6 w-96">
             <h3 class="text-2xl font-semibold mb-4">Modify Review</h3>
-            <form action="modify-review.php" method="POST">
+            <form method="POST">
                 <div class="mb-4">
                     <label for="vehicle" class="block text-gray-700">Vehicle</label>
                     <input type="text" id="vehicle" name="vehicle" class="w-full px-4 py-2 border border-gray-300 rounded-lg" disabled>
@@ -79,7 +90,7 @@
                 </div>
                 <div class="flex justify-end space-x-4">
                     <button type="button" onclick="closeModifyReviewPopup()" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">Cancel</button>
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Save Changes</button>
+                    <button id="edit" name="edit" type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -87,10 +98,11 @@
 
     <script>
         // Open Modify Review Popup with Pre-filled Data
-        function openModifyReviewPopup(vehicle, reviewText, rating) {
+        function openModifyReviewPopup(vehicle, reviewText, rating, review) {
             document.getElementById("vehicle").value = vehicle;
             document.getElementById("reviewText").value = reviewText;
             document.getElementById("rating").value = rating;
+            document.getElementById("edit").value = review;
             document.getElementById("modifyReviewPopup").classList.remove("hidden");
         }
 

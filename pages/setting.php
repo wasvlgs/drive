@@ -19,17 +19,17 @@
                 <h2 class="text-3xl font-bold text-gray-800 mb-6">Account Settings</h2>
 
                 <!-- Change Password Form -->
-                <form id="change-password-form" action="change-password.php" method="POST" class="space-y-6 bg-white p-6 rounded-lg shadow-lg">
+                <form id="change-password-form" method="POST" class="space-y-6 bg-white p-6 rounded-lg shadow-lg">
                     <!-- Current Password -->
                     <div>
                         <label for="current-password" class="block text-gray-700">Current Password</label>
-                        <input type="password" id="current-password" name="current-password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="password" id="current-password" name="currentPassword" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
 
                     <!-- New Password -->
                     <div>
                         <label for="new-password" class="block text-gray-700">New Password</label>
-                        <input type="password" id="new-password" name="new-password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="password" id="new-password" name="newPassword" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
 
                     <!-- Confirm New Password -->
@@ -45,12 +45,34 @@
 
                     <!-- Save Changes Button -->
                     <div class="mt-4">
-                        <button type="submit" id="save-changes" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">Save Changes</button>
+                        <button name="saveChange" type="submit" id="save-changes" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">Save Changes</button>
                     </div>
                 </form>
             </section>
         </main>
     </div>
+
+
+    <?php
+
+        require_once '../commands/profileManage.php';
+        $callFunctions = new manageProfile($conn->getConnect(),$getID);
+
+
+        if($_SERVER['REQUEST_METHOD'] === "POST"){
+            if(isset($_POST['saveChange'])){
+                $getOldPass = htmlspecialchars(trim($_POST['currentPassword']));
+                $getNewPass = htmlspecialchars(trim($_POST['newPassword'])); 
+                if(!empty($getOldPass) && !empty($getNewPass)){
+                    $getNew = password_hash($getNewPass, PASSWORD_DEFAULT);
+                    $callFunctions->updatePassword($getOldPass, $getNew);
+                }else{
+                    echo '<script>alert("Invalid information!")</script>';
+                }
+            }
+        }
+
+    ?>
 
     <script>
         // Get form elements

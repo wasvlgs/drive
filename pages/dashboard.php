@@ -18,6 +18,9 @@
     <!-- Header -->
         <?php
             require_once '../commands/header.php';
+            require_once '../commands/clientStatique.php';
+
+            $callFunction = new getClientStatique($conn->getConnect(),$getID);
         ?>
 
         <!-- Main Content Area -->
@@ -31,22 +34,32 @@
                     <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                         <h3 class="text-2xl font-bold text-blue-600">
                             <?php
-                                
+                                echo $callFunction->getActiveReservation();
                              ?>
                         </h3>
                         <p class="text-gray-600">Active Reservations</p>
                     </div>
                     <div class="bg-white shadow-lg rounded-lg p-6 text-center">
-                        <h3 class="text-2xl font-bold text-blue-600">15</h3>
+                        <h3 class="text-2xl font-bold text-blue-600">
+                            <?php
+                                echo $callFunction->getReviews();
+                             ?>
+                        </h3>
                         <p class="text-gray-600">Vehicles Reviewed</p>
                     </div>
                     <div class="bg-white shadow-lg rounded-lg p-6 text-center">
-                        <h3 class="text-2xl font-bold text-blue-600">3</h3>
-                        <p class="text-gray-600">Upcoming Reservations</p>
+                        <h3 class="text-2xl font-bold text-blue-600">
+                            <?php
+                                echo $callFunction->getPendingReservation();
+                             ?>
+                        </h3>
+                        <p class="text-gray-600">Pending Reservations</p>
                     </div>
                     <div class="bg-white shadow-lg rounded-lg p-6 text-center">
-                        <h3 class="text-2xl font-bold text-blue-600">$300</h3>
-                        <p class="text-gray-600">Total Spent</p>
+                        <h3 class="text-2xl font-bold text-blue-600"><?php
+                                echo $callFunction->getRejectedReservation();
+                             ?></h3>
+                        <p class="text-gray-600">Rejected Reservations</p>
                     </div>
                 </div>
             </section>
@@ -55,31 +68,8 @@
             <section id="explore" class="mb-12">
                 <h2 class="text-3xl font-bold text-gray-800 mb-4">Explore Vehicles</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Vehicle Card -->
-                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                        <img src="car1.jpg" alt="Luxury Sedan" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <h3 class="text-xl font-bold">Luxury Sedan</h3>
-                            <p class="text-gray-600">Starting at $50/day</p>
-                            <a href="#details" class="text-blue-600 hover:underline">View Details</a>
-                        </div>
-                    </div>
-                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                        <img src="car2.jpg" alt="SUV" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <h3 class="text-xl font-bold">SUV</h3>
-                            <p class="text-gray-600">Starting at $75/day</p>
-                            <a href="#details" class="text-blue-600 hover:underline">View Details</a>
-                        </div>
-                    </div>
-                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-                        <img src="car3.jpg" alt="Convertible" class="w-full h-40 object-cover">
-                        <div class="p-4">
-                            <h3 class="text-xl font-bold">Convertible</h3>
-                            <p class="text-gray-600">Starting at $90/day</p>
-                            <a href="#details" class="text-blue-600 hover:underline">View Details</a>
-                        </div>
-                    </div>
+                    <?php $callFunction->showVehicules(); ?>
+                    
                 </div>
             </section>
 
@@ -96,18 +86,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="border-b">
-                            <td class="py-4 px-6">Luxury Sedan</td>
-                            <td class="py-4 px-6">2024-01-15</td>
-                            <td class="py-4 px-6">2024-01-20</td>
-                            <td class="py-4 px-6 text-green-600">Confirmed</td>
-                        </tr>
-                        <tr class="border-b">
-                            <td class="py-4 px-6">SUV</td>
-                            <td class="py-4 px-6">2024-01-10</td>
-                            <td class="py-4 px-6">2024-01-15</td>
-                            <td class="py-4 px-6 text-yellow-600">Pending</td>
-                        </tr>
+                        <?php $callFunction->showReservation(); ?>
+
                     </tbody>
                 </table>
             </section>
@@ -116,8 +96,9 @@
             <section id="reviews">
                 <h2 class="text-3xl font-bold text-gray-800 mb-4">My Reviews</h2>
                 <div class="space-y-4">
+                    <?php $callFunction->showReviews(); ?>
                     <!-- Review Item -->
-                    <div class="bg-white shadow-lg rounded-lg p-6">
+                    <!-- <div class="bg-white shadow-lg rounded-lg p-6">
                         <h3 class="font-bold text-gray-800">Luxury Sedan</h3>
                         <p class="text-gray-600">"Great car! Smooth ride and very comfortable."</p>
                         <div class="text-yellow-500 mt-2">★★★★★</div>
@@ -126,7 +107,7 @@
                         <h3 class="font-bold text-gray-800">SUV</h3>
                         <p class="text-gray-600">"Perfect for family trips. Spacious and reliable."</p>
                         <div class="text-yellow-500 mt-2">★★★★☆</div>
-                    </div>
+                    </div> -->
                 </div>
             </section>
         </main>
