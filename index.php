@@ -33,7 +33,7 @@
             <h1 class="text-3xl font-bold text-blue-600">Drive & Loc</h1>
             <nav class="hidden md:flex space-x-6">
                 <a href="#home" class="text-gray-700 hover:text-blue-600 transition">Home</a>
-                <a href="#explore" class="text-gray-700 hover:text-blue-600 transition">Explore</a>
+                <a href="pages/explore.php" class="text-gray-700 hover:text-blue-600 transition">Explore</a>
                 <a href="#features" class="text-gray-700 hover:text-blue-600 transition">Features</a>
                 <a href="#contact" class="text-gray-700 hover:text-blue-600 transition">Contact</a>
             </nav>
@@ -50,42 +50,7 @@
         </div>
     </section>
 
-    <!-- Explore Section -->
-    <section id="explore" class="py-20 bg-gray-100">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Our Top Picks</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-                <!-- Vehicle Card -->
-                <div class="relative group bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition">
-                    <img src="img/Europe Car Rental Market Research Report (2024-2032) - IMARC Group.jpg" alt="Luxury Sedan" class="w-full h-56 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2">Luxury Sedan</h3>
-                        <p class="text-gray-600 mb-4">Starting at $50/day</p>
-                        <a href="#details" class="text-blue-600 font-medium hover:underline">View Details</a>
-                    </div>
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition"></div>
-                </div>
-                <div class="relative group bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition">
-                    <img src="img/Europe Car Rental Market Research Report (2024-2032) - IMARC Group.jpg" alt="SUV" class="w-full h-56 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2">SUV</h3>
-                        <p class="text-gray-600 mb-4">Starting at $75/day</p>
-                        <a href="#details" class="text-blue-600 font-medium hover:underline">View Details</a>
-                    </div>
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition"></div>
-                </div>
-                <div class="relative group bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition">
-                    <img src="img/Europe Car Rental Market Research Report (2024-2032) - IMARC Group.jpg" alt="Convertible" class="w-full h-56 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2">Convertible</h3>
-                        <p class="text-gray-600 mb-4">Starting at $90/day</p>
-                        <a href="#details" class="text-blue-600 font-medium hover:underline">View Details</a>
-                    </div>
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+
 
     <!-- Features Section -->
     <section id="features" class="py-20 bg-white">
